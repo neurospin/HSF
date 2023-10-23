@@ -5,7 +5,7 @@
 # Current version: 3.0.0
 
 ca_mode: "1/2/3"
-models_path: "~/.hsf/models/single_sq/"
+models_path: "/drf/local/HSF/models/single-sq-v3.0.0/"
 models:
   arunet_single.onnx:
     url: "https://zenodo.org/record/6489202/files/arunet_3.0.0_85sparse_qat_single.onnx?download=1"

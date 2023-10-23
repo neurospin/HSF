@@ -3,7 +3,7 @@
 # Current version: 3.0.0
 
 ca_mode: "1/2/3"
-models_path: "~/.hsf/models/single/"
+models_path: "/drf/local/HSF/models/single-v3.0.0/"
 models:
   arunet_single.onnx:
     url: "https://zenodo.org/record/6457484/files/arunet_3.0.0_single.onnx?download=1"
