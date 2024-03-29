@@ -27,7 +27,6 @@ def mri_to_subject(mri: PosixPath) -> tio.Subject:
     subject = tio.Subject(mri=tio.ScalarImage(mri))
 
     preprocessing_pipeline = tio.Compose([
-        # tio.ToCanonical(),
         tio.ZNormalization(),
         tio.EnsureShapeMultiple(8),
     ])
@@ -53,30 +52,28 @@ def to_ca_mode(logits: torch.Tensor, ca_mode: str = "1/2/3") -> torch.Tensor:
         _in = torch.sum(logits[:, 1:, :, :, :], dim=1, keepdim=True)
 
         return torch.cat([_pre, _in], dim=1)
-    elif ca_mode == "1/2/3":
+    if ca_mode == "1/2/3":
         # identity
         return logits
-    elif ca_mode == "1/23":
+    if ca_mode == "1/23":
         # ca1; ca2+ca3
         _pre = logits[:, :3, :, :, :]
         _in = logits[:, 3:4, :, :, :] + logits[:, 4:5, :, :, :]
         _post = logits[:, 5:, :, :, :]
 
         return torch.cat([_pre, _in, _post], dim=1)
-    elif ca_mode == "123":
+    if ca_mode == "123":
         # ca1+ca2+ca3
         _pre = logits[:, :2, :, :, :]
         _in = logits[:,
                      2:3, :, :, :] + logits[:,
-                                            3:4, :, :, :] + logits[:,
-                                                                   4:5, :, :, :]
+                                            3:4, :, :, :] + logits[:, 4:
+                                                                   5, :, :, :]
         _post = logits[:, 5:, :, :, :]
 
         return torch.cat([_pre, _in, _post], dim=1)
-    else:
-        raise ValueError(
-            f"Unknown `ca_mode` ({ca_mode}). `ca_mode` must be 1/2/3, 1/23 or 123"
-        )
+    raise ValueError(
+        f"Unknown `ca_mode` ({ca_mode}). `ca_mode` must be 1/2/3, 1/23 or 123")
 
 
 def predict(mris: list,

@@ -30,21 +30,18 @@ def deepsparse_support() -> str:
     if vnni:
         # Optimal for int8 quantized NN
         return "full"
-    elif avx512:
+    if avx512:
         # AVX512 vector instruction set for fast NN inference
         return "partial"
-    elif avx2:
+    if avx2:
         # AVX2 vector instruction set slower than AVX512
         return "minimal"
-    else:
-        # No AVX2/512 or VNNI -> Risk of slow inference time
-        return "not supported"
+    # No AVX2/512 or VNNI -> Risk of slow inference time
+    return "not supported"
 
 
 def print_deepsparse_support():
-    """
-    Prints DeepSparse Support Status.
-    """
+    """Prints DeepSparse Support Status."""
     print(
         "DeepSparse Optimization Status (minimal: AVX2 | partial: AVX512 | full: AVX512 VNNI):",
         deepsparse_support())
@@ -107,7 +104,7 @@ class InferenceEngine:
             assert len(feed_names) == 1, "Only one input is supported"
             return self.engine.run(None, {feed_names[0]: x})
 
-        elif self.engine_name == "deepsparse":
+        if self.engine_name == "deepsparse":
             return self.engine.run([x])
 
     def set_deepsparse_engine(self, model: PosixPath):
@@ -133,7 +130,7 @@ class InferenceEngine:
         def _correct_provider(provider):
             if isinstance(provider, str):
                 return provider
-            elif isinstance(provider, ListConfig):
+            if isinstance(provider, ListConfig):
                 provider = list(provider)
                 assert len(provider) == 2
                 provider[1] = dict(provider[1])

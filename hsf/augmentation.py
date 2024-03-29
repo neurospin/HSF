@@ -27,9 +27,9 @@ def get_augmentation_pipeline(augmentation_cfg: DictConfig) -> tio.Compose:
     flip = tio.RandomFlip(**augmentation_cfg.flip)
     resample = tio.OneOf({
         tio.RandomAffine(**augmentation_cfg.affine):
-            augmentation_cfg.affine_probability,
+        augmentation_cfg.affine_probability,
         tio.RandomElasticDeformation(**augmentation_cfg.elastic):
-            augmentation_cfg.elastic_probability
+        augmentation_cfg.elastic_probability
     })
 
     return tio.Compose((flip, resample))
@@ -62,5 +62,4 @@ def get_augmented_subject(subject: tio.Subject, augmentation_cfg: DictConfig,
         subjects.append(subject)
 
         return subjects
-    else:
-        return [subject]
+    return [subject]
